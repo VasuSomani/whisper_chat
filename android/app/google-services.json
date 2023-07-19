@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "656966744080",
+    "project_id": "whisper-chat-cc8b3",
+    "storage_bucket": "whisper-chat-cc8b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656966744080:android:f0c6483223f3aed57bf295",
+        "android_client_info": {
+          "package_name": "com.example.whisper_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "656966744080-907n08rruc9r3ikj9qttjgaj70oph8bu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfYyX42bPV_UmBaqvB5XsUYLS_SeIcrf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "656966744080-907n08rruc9r3ikj9qttjgaj70oph8bu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "656966744080-sjjh9dutgug6ad1in932oq866l47e32a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.whisperChat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
