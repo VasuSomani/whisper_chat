@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -174,9 +175,55 @@ class TextFieldConfirmPass extends StatelessWidget {
   }
 }
 
-class TextFieldName extends StatelessWidget {
-  TextFieldName(this.controller);
+class TextFieldUserName extends StatefulWidget {
+  TextFieldUserName(this.controller);
   final TextEditingController controller;
+
+  @override
+  State<TextFieldUserName> createState() => _TextFieldUserNameState();
+}
+
+class _TextFieldUserNameState extends State<TextFieldUserName> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  QuerySnapshot? querySnapshot;
+  String? validationError;
+  bool isValidated = false;
+  bool isSnakeCase(String text) {
+    final regex = RegExp(r'^[a-z]+(?:_[a-z]+)*$');
+    return regex.hasMatch(text);
+  }
+
+  Future userNameValidation(String? value) async {
+    querySnapshot =
+        await db.collection('users').where('userName', isEqualTo: value).get();
+
+    if (value == null || value.trim().isEmpty) {
+      setState(() {
+        validationError = "Username can't be empty";
+        isValidated = false;
+      });
+    } else if (!isSnakeCase(value)) {
+      setState(() {
+        validationError = "Username must be in snake_case";
+        isValidated = false;
+      });
+    } else if (querySnapshot == null) {
+      setState(() {
+        validationError = null;
+        isValidated = true;
+      });
+    } else if (querySnapshot!.docs.isNotEmpty) {
+      setState(() {
+        validationError = "Username already exists";
+        isValidated = false;
+      });
+    } else {
+      setState(() {
+        validationError = null;
+        isValidated = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,15 +233,16 @@ class TextFieldName extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 5),
           child: Text(
-            "Full Name",
+            "User Name",
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
         TextFormField(
-          controller: controller,
+          controller: widget.controller,
           textInputAction: TextInputAction.next,
+          maxLength: 15,
           decoration: InputDecoration(
-            hintText: "Enter your name",
+            hintText: "Enter user name",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
             prefixIcon: Icon(Icons.person_rounded),
             filled: true,
@@ -203,14 +251,17 @@ class TextFieldName extends StatelessWidget {
             errorBorder: errorBorder,
             enabledBorder: enabledBorder,
             focusedBorder: focusedBorder,
+            suffixIcon: Icon(
+              Icons.check_circle,
+              size: 20,
+              color: isValidated ? Colors.green : Colors.grey,
+            ),
           ),
+          onChanged: (value) {
+            userNameValidation(value);
+          },
           validator: (value) {
-            if (value == null ||
-                value.trim() == "" ||
-                value.trim().length < 2) {
-              return "Enter a valid name";
-            }
-            return null;
+            return validationError;
           },
         ),
       ],

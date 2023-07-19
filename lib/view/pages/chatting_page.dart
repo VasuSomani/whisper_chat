@@ -1,16 +1,28 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../controllers/send_mesaage_textfield.dart';
+import '../../services/auth_service.dart';
+import '../utils/chat_messages.dart';
 import '../../Constants/colors.dart';
-import '../../controllers/auth_text_fields.dart';
+import '../utils/buttons.dart';
+import '../utils/snackbar.dart';
 
-class ChattingPage extends StatelessWidget {
-  ChattingPage({Key? key}) : super(key: key);
+class ChattingPage extends StatefulWidget {
+  const ChattingPage({Key? key}) : super(key: key);
+  @override
+  State<ChattingPage> createState() => _ChattingPageState();
+}
+
+class _ChattingPageState extends State<ChattingPage> {
   TextEditingController chatController = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  void sendMessage() {
-    if (formKey.currentState!.validate()) {
-      chatController.clear();
-    }
+  bool isLoading = false;
+  AuthService authService = AuthService();
+
+  @override
+  void dispose() {
+    chatController.dispose();
+    super.dispose();
   }
 
   @override
@@ -26,10 +38,66 @@ class ChattingPage extends StatelessWidget {
                   ?.copyWith(color: Colors.white)),
           automaticallyImplyLeading: false,
           centerTitle: false,
-          actions: const [
+          actions: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Icon(Icons.logout_rounded, color: Colors.white, size: 30),
+              child: IconButton(
+                icon: Icon(Icons.logout_rounded, color: Colors.white, size: 30),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text('Confirm Logout'),
+                            titleTextStyle: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
+                                    color: primaryColor,
+                                    fontWeight: FontWeight.bold),
+                            content:
+                                const Text('Are you sure you want to logout?'),
+                            contentTextStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(color: Colors.black),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // Close the dialog
+                                },
+                                child: Text('Cancel',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium
+                                        ?.copyWith(color: primaryColor)),
+                              ),
+                              PrimaryButton(() async {
+                                try {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  await authService.signOut().then((value) {
+                                    showCustomSnackBar(
+                                        "Logged out successfully", context);
+                                    Navigator.pop(context);
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    Navigator.pushReplacementNamed(
+                                        context, '/login');
+                                  });
+                                } on FirebaseAuthException catch (e) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  showCustomSnackBar(e.toString(), context,
+                                      isAlert: true);
+                                }
+                              }, "Log Out", isLoading: isLoading),
+                            ],
+                          ));
+                },
+              ),
             )
           ],
         ),
@@ -39,55 +107,8 @@ class ChattingPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Form(
-                  key: formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: IntrinsicHeight(
-                          child: TextFormField(
-                            controller: chatController,
-                            textInputAction: TextInputAction.next,
-                            minLines: 1,
-                            maxLines: 10,
-                            decoration: InputDecoration(
-                              hintText: "Message",
-                              hintStyle: Theme.of(context).textTheme.bodyMedium,
-                              filled: true,
-                              fillColor: textFieldBg,
-                              enabledBorder: enabledBorder,
-                              focusedBorder: focusedBorder,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim() == "") {
-                                return null;
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      GestureDetector(
-                        onTap: sendMessage,
-                        child: ClipOval(
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            color: primaryColor,
-                            child: const Icon(
-                              Icons.send_rounded,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                Expanded(child: ChatMessages()),
+                SendMessage(chatController),
               ],
             ),
           ),
