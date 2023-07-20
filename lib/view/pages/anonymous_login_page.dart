@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:whisper_chat/Constants/colors.dart';
-import 'package:whisper_chat/controllers/auth_textfields.dart';
-import 'package:whisper_chat/services/auth_service.dart';
-import 'package:whisper_chat/view/utils/buttons.dart';
-import 'package:whisper_chat/view/utils/snackbar.dart';
+
+import '../../Constants/colors.dart';
+import '../../controllers/auth_textfields.dart';
+import '../../services/auth_service.dart';
+import '../utils/buttons.dart';
+import '../utils/snackbar.dart';
 
 bool isLoading = false;
 AuthService authService = AuthService();
@@ -31,7 +32,7 @@ class _UserNameState extends State<UserName> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/room');
+          Navigator.pushReplacementNamed(context, '/chat');
           usernameController.clear();
           showCustomSnackBar("You are anonymous now", context);
         });
@@ -54,7 +55,7 @@ class _UserNameState extends State<UserName> {
       child: Scaffold(
           appBar: AppBar(
               backgroundColor: primaryColor,
-              title: Text("Enter username"),
+              title: const Text("Enter username"),
               titleTextStyle: Theme.of(context)
                   .textTheme
                   .headlineMedium
@@ -68,7 +69,7 @@ class _UserNameState extends State<UserName> {
                   autovalidateMode: AutovalidateMode.disabled,
                   child: TextFieldUserName(usernameController),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 PrimaryButton(
                   authorizeAnonymous,
                   "Proceed",

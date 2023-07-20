@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../Constants/colors.dart';
 
 class PrimaryButton extends StatelessWidget {
-  PrimaryButton(this.onPressed, this.text, {this.isLoading = false});
+  const PrimaryButton(this.onPressed, this.text,
+      {super.key, this.isLoading = false});
   final Function()? onPressed;
   final String text;
   final bool isLoading;
@@ -28,7 +30,7 @@ class PrimaryButton extends StatelessWidget {
 }
 
 class SecondaryButton extends StatelessWidget {
-  SecondaryButton(this.onPressed, this.text);
+  const SecondaryButton(this.onPressed, this.text, {super.key});
   final Function()? onPressed;
   final String text;
   @override

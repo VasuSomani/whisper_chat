@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../Constants/colors.dart';
 
 OutlineInputBorder enabledBorder = OutlineInputBorder(
@@ -16,7 +17,8 @@ OutlineInputBorder focusedBorder = OutlineInputBorder(
     borderSide: const BorderSide(color: primaryColor, width: 1));
 
 class TextFieldEmail extends StatelessWidget {
-  TextFieldEmail(this.controller, {this.enableValidation = false, super.key});
+  const TextFieldEmail(this.controller,
+      {this.enableValidation = false, super.key});
   final TextEditingController controller;
   final bool enableValidation;
 
@@ -41,7 +43,7 @@ class TextFieldEmail extends StatelessWidget {
           decoration: InputDecoration(
             hintText: "Enter your e-mail here",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
-            prefixIcon: Icon(Icons.alternate_email_rounded),
+            prefixIcon: const Icon(Icons.alternate_email_rounded),
             filled: true,
             fillColor: textFieldBg,
             focusedErrorBorder: errorBorder,
@@ -66,7 +68,8 @@ class TextFieldEmail extends StatelessWidget {
 }
 
 class TextFieldPass extends StatefulWidget {
-  TextFieldPass(this.controller, {this.enableValidation = false});
+  const TextFieldPass(this.controller,
+      {super.key, this.enableValidation = false});
   final TextEditingController controller;
   final bool enableValidation;
 
@@ -98,7 +101,7 @@ class _TextFieldPassState extends State<TextFieldPass> {
           decoration: InputDecoration(
             hintText: "Enter your password here",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
-            prefixIcon: Icon(Icons.lock_rounded),
+            prefixIcon: const Icon(Icons.lock_rounded),
             suffixIconColor: Colors.grey,
             suffixIcon: IconButton(
               icon: (isObscure)
@@ -139,8 +142,8 @@ class _TextFieldPassState extends State<TextFieldPass> {
 }
 
 class TextFieldConfirmPass extends StatelessWidget {
-  TextFieldConfirmPass(this.controller, this.password,
-      {this.enableValidation = false});
+  const TextFieldConfirmPass(this.controller, this.password,
+      {super.key, this.enableValidation = false});
   final TextEditingController controller;
   final TextEditingController password;
   final bool enableValidation;
@@ -166,7 +169,7 @@ class TextFieldConfirmPass extends StatelessWidget {
           decoration: InputDecoration(
             hintText: "Enter your password again",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
-            prefixIcon: Icon(Icons.lock_rounded),
+            prefixIcon: const Icon(Icons.lock_rounded),
             filled: true,
             fillColor: textFieldBg,
             focusedErrorBorder: errorBorder,
@@ -190,7 +193,8 @@ class TextFieldConfirmPass extends StatelessWidget {
 }
 
 class TextFieldUserName extends StatefulWidget {
-  TextFieldUserName(this.controller, {this.enableValidation = false});
+  const TextFieldUserName(this.controller,
+      {super.key, this.enableValidation = false});
   final TextEditingController controller;
   final bool enableValidation;
 
@@ -255,7 +259,7 @@ class _TextFieldUserNameState extends State<TextFieldUserName> {
           decoration: InputDecoration(
             hintText: "Enter user name",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
-            prefixIcon: Icon(Icons.person_rounded),
+            prefixIcon: const Icon(Icons.person_rounded),
             filled: true,
             fillColor: textFieldBg,
             focusedErrorBorder: errorBorder,

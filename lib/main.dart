@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:whisper_chat/view/pages/chatting_page.dart';
-import 'package:whisper_chat/view/pages/login_page.dart';
-import 'constants/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:whisper_chat/firebase_options.dart';
+
+import 'view/pages/chatting_page.dart';
+import 'view/pages/login_page.dart';
+import 'constants/colors.dart';
+import 'firebase_options.dart';
 import 'view/router/routes.dart';
 
 void main() async {
@@ -27,11 +28,11 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ChattingPage();
+            return const ChattingPage();
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(color: Colors.black);
+            return const CircularProgressIndicator(color: Colors.black);
           } else {
-            return LogInPage();
+            return const LogInPage();
           }
         },
       ),

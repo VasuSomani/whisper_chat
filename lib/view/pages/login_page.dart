@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:whisper_chat/services/auth_service.dart';
+
+import '../../services/auth_service.dart';
 import '../../Constants/colors.dart';
 import '../../controllers/auth_textfields.dart';
 import '../utils/buttons.dart';
@@ -38,7 +38,7 @@ class _LogInPageState extends State<LogInPage> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/room');
+          Navigator.pushReplacementNamed(context, '/chat');
         });
       } on FirebaseAuthException catch (e) {
         setState(() {

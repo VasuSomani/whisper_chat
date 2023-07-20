@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:whisper_chat/Constants/colors.dart';
+
+import '../../Constants/colors.dart';
 
 class ChatMessages extends StatelessWidget {
   const ChatMessages({Key? key}) : super(key: key);
@@ -42,22 +43,25 @@ class ChatMessages extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (!isNextSame) SizedBox(height: 20),
+                      if (!isNextSame) const SizedBox(height: 20),
                       if (!isNextSame && !myMessage)
-                        Text(
-                          currUser['userName'],
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(color: Colors.black),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: Text(
+                            currUser['userName'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(color: Colors.black),
+                          ),
                         ),
                       Container(
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.sizeOf(context).width * 0.7,
                           maxHeight: MediaQuery.sizeOf(context).height * 0.6,
                         ),
-                        margin:
-                            EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 10),
                         padding: const EdgeInsets.all(10),
                         color: (myMessage)
                             ? primaryColor
@@ -73,6 +77,7 @@ class ChatMessages extends StatelessWidget {
                                 .textTheme
                                 .bodyLarge
                                 ?.copyWith(color: Colors.white),
+                            enableInteractiveSelection: true,
                             maxLines: 30,
                             minLines: 1,
                           ),

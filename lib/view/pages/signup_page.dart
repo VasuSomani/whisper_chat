@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import '../../services/auth_service.dart';
 import '../../Constants/colors.dart';
 import '../utils/buttons.dart';
@@ -44,7 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/room');
+          Navigator.pushReplacementNamed(context, '/chat');
         });
       } on FirebaseAuthException catch (e) {
         setState(() {
@@ -62,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text("Create an Account"),
+        title: const Text("Create an Account"),
         titleTextStyle: Theme.of(context)
             .textTheme
             .headlineMedium

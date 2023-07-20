@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:whisper_chat/view/pages/private_room_page.dart';
 
+import '../pages/private_room_page.dart';
 import '../pages/chatting_page.dart';
 import '../pages/login_page.dart';
 import '../pages/signup_page.dart';
@@ -13,9 +13,9 @@ class Routes extends NavigatorObserver {
       case '/signup':
         return MaterialPageRoute(builder: (_) => const SignUpPage());
       case '/chat':
-        return MaterialPageRoute(builder: (_) => ChattingPage());
+        return MaterialPageRoute(builder: (_) => const ChattingPage());
       case '/room':
-        return MaterialPageRoute(builder: (_) => PrivateRoomPage());
+        return MaterialPageRoute(builder: (_) => const PrivateRoomPage());
       default:
         return _errorRoute();
     }
