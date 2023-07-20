@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../../Constants/colors.dart';
-import '../../controllers/auth_textfields.dart';
-import '../../services/auth_service.dart';
-import '../utils/buttons.dart';
-import '../utils/snackbar.dart';
+import 'package:whisper_chat/Constants/colors.dart';
+import 'package:whisper_chat/controllers/auth_textfields.dart';
+import 'package:whisper_chat/services/auth_service.dart';
+import 'package:whisper_chat/view/utils/buttons.dart';
+import 'package:whisper_chat/view/utils/snackbar.dart';
 
 bool isLoading = false;
 AuthService authService = AuthService();
@@ -34,7 +33,7 @@ class _UserNameState extends State<UserName> {
           });
           Navigator.pushReplacementNamed(context, '/chat');
           usernameController.clear();
-          showCustomSnackBar("You are anonymous now", context);
+          showCustomSnackBar("Logged In Anonymously", context);
         });
       } on FirebaseAuthException catch (e) {
         setState(() {
@@ -54,12 +53,13 @@ class _UserNameState extends State<UserName> {
       },
       child: Scaffold(
           appBar: AppBar(
-              backgroundColor: primaryColor,
-              title: const Text("Enter username"),
-              titleTextStyle: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(color: Colors.white)),
+            backgroundColor: primaryColor,
+            title: Text("Enter username"),
+            titleTextStyle: Theme.of(context)
+                .textTheme
+                .headlineMedium
+                ?.copyWith(color: Colors.white),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -69,7 +69,7 @@ class _UserNameState extends State<UserName> {
                   autovalidateMode: AutovalidateMode.disabled,
                   child: TextFieldUserName(usernameController),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: 40),
                 PrimaryButton(
                   authorizeAnonymous,
                   "Proceed",
