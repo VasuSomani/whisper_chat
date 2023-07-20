@@ -60,7 +60,6 @@ class _SendMessageState extends State<SendMessage> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          UserModel currentUser = snapshot.data!;
           return Form(
             key: formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,

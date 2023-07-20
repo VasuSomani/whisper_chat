@@ -19,7 +19,9 @@ class PrimaryButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: (isLoading)
             ? const CircularProgressIndicator(color: Colors.white)
-            : Text(text, style: Theme.of(context).textTheme.labelMedium),
+            : Text(text,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }

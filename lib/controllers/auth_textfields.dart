@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../Constants/colors.dart';
 
 OutlineInputBorder enabledBorder = OutlineInputBorder(
@@ -17,8 +16,9 @@ OutlineInputBorder focusedBorder = OutlineInputBorder(
     borderSide: const BorderSide(color: primaryColor, width: 1));
 
 class TextFieldEmail extends StatelessWidget {
-  TextFieldEmail(this.controller, {super.key});
+  TextFieldEmail(this.controller, {this.enableValidation = false, super.key});
   final TextEditingController controller;
+  final bool enableValidation;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +35,9 @@ class TextFieldEmail extends StatelessWidget {
         TextFormField(
           controller: controller,
           textInputAction: TextInputAction.next,
+          autovalidateMode: (enableValidation)
+              ? AutovalidateMode.onUserInteraction
+              : AutovalidateMode.disabled,
           decoration: InputDecoration(
             hintText: "Enter your e-mail here",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
@@ -46,6 +49,7 @@ class TextFieldEmail extends StatelessWidget {
             enabledBorder: enabledBorder,
             focusedBorder: focusedBorder,
           ),
+          enableSuggestions: true,
           validator: (value) {
             if (value == null ||
                 value.trim() == "" ||
@@ -62,8 +66,9 @@ class TextFieldEmail extends StatelessWidget {
 }
 
 class TextFieldPass extends StatefulWidget {
-  TextFieldPass(this.controller);
+  TextFieldPass(this.controller, {this.enableValidation = false});
   final TextEditingController controller;
+  final bool enableValidation;
 
   @override
   State<TextFieldPass> createState() => _TextFieldPassState();
@@ -87,6 +92,9 @@ class _TextFieldPassState extends State<TextFieldPass> {
         TextFormField(
           controller: widget.controller,
           textInputAction: TextInputAction.next,
+          autovalidateMode: (widget.enableValidation)
+              ? AutovalidateMode.onUserInteraction
+              : AutovalidateMode.disabled,
           decoration: InputDecoration(
             hintText: "Enter your password here",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
@@ -122,7 +130,6 @@ class _TextFieldPassState extends State<TextFieldPass> {
                 .hasMatch(value)) {
               return "Password should be a combination of capital, small, integer, and special characters";
             }
-
             return null;
           },
         ),
@@ -132,9 +139,11 @@ class _TextFieldPassState extends State<TextFieldPass> {
 }
 
 class TextFieldConfirmPass extends StatelessWidget {
-  TextFieldConfirmPass(this.controller, this.password);
+  TextFieldConfirmPass(this.controller, this.password,
+      {this.enableValidation = false});
   final TextEditingController controller;
   final TextEditingController password;
+  final bool enableValidation;
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +160,9 @@ class TextFieldConfirmPass extends StatelessWidget {
         TextFormField(
           controller: controller,
           textInputAction: TextInputAction.next,
+          autovalidateMode: (enableValidation)
+              ? AutovalidateMode.onUserInteraction
+              : AutovalidateMode.disabled,
           decoration: InputDecoration(
             hintText: "Enter your password again",
             hintStyle: Theme.of(context).textTheme.bodyMedium,
@@ -164,7 +176,9 @@ class TextFieldConfirmPass extends StatelessWidget {
           ),
           obscureText: true,
           validator: (value) {
-            if (value != password.text) {
+            if (value == null || value.trim() == "") {
+              return "Confirm Password can't be empty";
+            } else if (value != password.text) {
               return "Confirm Password must be same as Password";
             }
             return null;
@@ -176,8 +190,9 @@ class TextFieldConfirmPass extends StatelessWidget {
 }
 
 class TextFieldUserName extends StatefulWidget {
-  TextFieldUserName(this.controller);
+  TextFieldUserName(this.controller, {this.enableValidation = false});
   final TextEditingController controller;
+  final bool enableValidation;
 
   @override
   State<TextFieldUserName> createState() => _TextFieldUserNameState();
@@ -193,36 +208,29 @@ class _TextFieldUserNameState extends State<TextFieldUserName> {
     return regex.hasMatch(text);
   }
 
-  Future userNameValidation(String? value) async {
-    querySnapshot =
-        await db.collection('users').where('userName', isEqualTo: value).get();
-
+  void userNameValidation(String value) {
     if (value == null || value.trim().isEmpty) {
-      setState(() {
-        validationError = "Username can't be empty";
-        isValidated = false;
-      });
+      updateValidation(null, false);
     } else if (!isSnakeCase(value)) {
-      setState(() {
-        validationError = "Username must be in snake_case";
-        isValidated = false;
-      });
-    } else if (querySnapshot == null) {
-      setState(() {
-        validationError = null;
-        isValidated = true;
-      });
-    } else if (querySnapshot!.docs.isNotEmpty) {
-      setState(() {
-        validationError = "Username already exists";
-        isValidated = false;
-      });
+      updateValidation("Username must be in snake_case", false);
     } else {
-      setState(() {
-        validationError = null;
-        isValidated = true;
-      });
+      db.collection('users').where('userName', isEqualTo: value).get().then(
+        (snapshot) {
+          if (snapshot.docs.isNotEmpty) {
+            updateValidation("Username already exists", false);
+          } else {
+            updateValidation(null, true);
+          }
+        },
+      );
     }
+  }
+
+  void updateValidation(String? error, bool validated) {
+    setState(() {
+      validationError = error;
+      isValidated = validated;
+    });
   }
 
   @override
@@ -240,6 +248,9 @@ class _TextFieldUserNameState extends State<TextFieldUserName> {
         TextFormField(
           controller: widget.controller,
           textInputAction: TextInputAction.next,
+          autovalidateMode: (widget.enableValidation)
+              ? AutovalidateMode.onUserInteraction
+              : AutovalidateMode.disabled,
           maxLength: 15,
           decoration: InputDecoration(
             hintText: "Enter user name",
@@ -261,7 +272,14 @@ class _TextFieldUserNameState extends State<TextFieldUserName> {
             userNameValidation(value);
           },
           validator: (value) {
-            return validationError;
+            if (value == null || value.trim().isEmpty) {
+              return "Username can't be empty";
+            } else if (!isSnakeCase(value)) {
+              return "Username must be in snake_case";
+            } else if (!isValidated) {
+              return validationError;
+            }
+            return null;
           },
         ),
       ],

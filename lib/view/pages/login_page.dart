@@ -6,7 +6,7 @@ import 'package:whisper_chat/services/auth_service.dart';
 import '../../Constants/colors.dart';
 import '../../controllers/auth_textfields.dart';
 import '../utils/buttons.dart';
-import '../utils/enter_username.dart';
+import 'anonymous_login_page.dart';
 import '../utils/snackbar.dart';
 
 class LogInPage extends StatefulWidget {
@@ -18,43 +18,40 @@ class LogInPage extends StatefulWidget {
 
 class _LogInPageState extends State<LogInPage> {
   bool isLoading = false;
+  final emailID = TextEditingController();
+  final password = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
-    final emailID = TextEditingController();
-    final password = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-    AuthService authService = AuthService();
 
     void authorize() async {
-      if (formKey.currentState!.validate()) {
-        setState(() {
-          isLoading = true;
-        });
-        try {
-          await authService
-              .signInWithEmail(
-                  emailID.text.toString(), password.text.toString())
-              .then((value) {
-            setState(() {
-              isLoading = false;
-            });
-            Navigator.pushReplacementNamed(context, '/chat');
-            showCustomSnackBar("Logged In successfully", context);
-          });
-        } on FirebaseAuthException catch (e) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        await authService
+            .signInWithEmail(emailID.text.toString(), password.text.toString())
+            .then((value) {
           setState(() {
             isLoading = false;
           });
-          showCustomSnackBar(e.message.toString(), context, isAlert: true);
-        }
+          Navigator.pushReplacementNamed(context, '/room');
+        });
+      } on FirebaseAuthException catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        showCustomSnackBar(e.message.toString(), context, isAlert: true);
       }
     }
 
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Center(
             child: Padding(
@@ -68,14 +65,12 @@ class _LogInPageState extends State<LogInPage> {
                         .headlineLarge
                         ?.copyWith(color: primaryColor),
                   ),
-                  const Icon(
-                    CupertinoIcons.chat_bubble_2,
-                    size: 120,
+                  Image.asset(
+                    'assets/icons/chat_icon.png',
                     color: primaryColor,
                   ),
                   SizedBox(height: MediaQuery.sizeOf(context).height / 30),
                   Form(
-                    autovalidateMode: AutovalidateMode.always,
                     key: formKey,
                     child: SingleChildScrollView(
                       child: Column(
@@ -119,66 +114,58 @@ class _LogInPageState extends State<LogInPage> {
                                         isLoading: isLoading),
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: height / 75, bottom: height / 100),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Don't have an account?  ",
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Don't have an account?",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(color: Colors.black),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.pushNamed(
+                                          context, '/signup'),
+                                      child: Text(
+                                        "Sign Up",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium
-                                            ?.copyWith(color: Colors.black),
+                                            ?.copyWith(
+                                                color: primaryColor,
+                                                fontWeight: FontWeight.bold),
                                       ),
-                                      InkWell(
-                                        onTap: () => Navigator.pushNamed(
-                                            context, '/signup'),
-                                        child: Text(
-                                          "Sign Up",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.copyWith(
-                                                  color: primaryColor,
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: height / 100, bottom: height / 50),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Chat Secretly  ",
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Chat Secretly",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(color: Colors.black),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => UserName(),
+                                          )),
+                                      child: Text(
+                                        "Login Anonymously",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium
-                                            ?.copyWith(color: Colors.black),
+                                            ?.copyWith(
+                                                color: primaryColor,
+                                                fontWeight: FontWeight.bold),
                                       ),
-                                      InkWell(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => UserName(),
-                                            )),
-                                        child: Text(
-                                          "Login Anonymously",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.copyWith(
-                                                  color: primaryColor,
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

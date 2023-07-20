@@ -39,28 +39,46 @@ class ChatMessages extends StatelessWidget {
                     ? (MainAxisAlignment.end)
                     : (MainAxisAlignment.start),
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    padding: const EdgeInsets.all(10),
-                    color: ColorScheme.fromSeed(seedColor: primaryColor)
-                        .primaryContainer,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (!isNextSame && !myMessage)
-                          Text(
-                            currUser['userName'],
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (!isNextSame) SizedBox(height: 20),
+                      if (!isNextSame && !myMessage)
                         Text(
-                          currUser['message'],
+                          currUser['userName'],
                           style: Theme.of(context)
                               .textTheme
-                              .bodyLarge
+                              .headlineSmall
                               ?.copyWith(color: Colors.black),
                         ),
-                      ],
-                    ),
+                      Container(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.sizeOf(context).width * 0.7,
+                          maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+                        ),
+                        margin:
+                            EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                        padding: const EdgeInsets.all(10),
+                        color: (myMessage)
+                            ? primaryColor
+                            : primaryColor.withOpacity(0.7),
+                        child: Scrollbar(
+                          interactive: true,
+                          scrollbarOrientation: (myMessage)
+                              ? ScrollbarOrientation.right
+                              : ScrollbarOrientation.left,
+                          child: SelectableText(
+                            currUser['message'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: Colors.white),
+                            maxLines: 30,
+                            minLines: 1,
+                          ),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               );
@@ -72,7 +90,7 @@ class ChatMessages extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .labelMedium!
-                      .copyWith(color: darkGrey)));
+                      .copyWith(color: primaryColor)));
         }
       },
     );

@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whisper_chat/Constants/colors.dart';
 import 'package:whisper_chat/controllers/auth_textfields.dart';
 import 'package:whisper_chat/services/auth_service.dart';
 import 'package:whisper_chat/view/utils/buttons.dart';
 import 'package:whisper_chat/view/utils/snackbar.dart';
-
-import '../../Constants/colors.dart';
 
 bool isLoading = false;
 AuthService authService = AuthService();
@@ -33,9 +31,9 @@ class _UserNameState extends State<UserName> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/chat');
+          Navigator.pushReplacementNamed(context, '/room');
           usernameController.clear();
-          showCustomSnackBar("Logged In Anonymously", context);
+          showCustomSnackBar("You are anonymous now", context);
         });
       } on FirebaseAuthException catch (e) {
         setState(() {
@@ -55,12 +53,12 @@ class _UserNameState extends State<UserName> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: Text("Enter username"),
-            titleTextStyle: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(color: Colors.white),
-          ),
+              backgroundColor: primaryColor,
+              title: Text("Enter username"),
+              titleTextStyle: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(color: Colors.white)),
           body: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(

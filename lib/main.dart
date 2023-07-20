@@ -1,11 +1,12 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:whisper_chat/firebase_options.dart';
-
-import 'view/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:whisper_chat/view/pages/chatting_page.dart';
+import 'package:whisper_chat/view/pages/login_page.dart';
 import 'constants/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:whisper_chat/firebase_options.dart';
+import 'view/router/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,8 +23,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
-      onGenerateRoute: Routes.generateRoute,
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ChattingPage();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(color: Colors.black);
+          } else {
+            return LogInPage();
+          }
+        },
+      ),
       theme: ThemeData(
         backgroundColor: bgColor2,
         primarySwatch: Colors.deepPurple,
@@ -38,7 +49,7 @@ class MyApp extends StatelessWidget {
           ),
           headlineMedium: GoogleFonts.notoSans(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 23,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
           ),
@@ -77,6 +88,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      onGenerateRoute: Routes.generateRoute,
     );
   }
 }
