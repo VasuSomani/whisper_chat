@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:whisper_chat/view/utils/logout_dialog.dart';
 import '../../controllers/send_mesaage_textfield.dart';
 import '../../services/auth_service.dart';
 import '../utils/chat_messages.dart';
@@ -24,44 +25,55 @@ class _ChattingPageState extends State<ChattingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Private Room",
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(color: Colors.white)),
-            TextButton(
-              onPressed: () =>
-                  Clipboard.setData(ClipboardData(text: widget.roomID)),
-              child: Text(widget.roomID,
-                  textAlign: TextAlign.end,
+    return WillPopScope(
+      onWillPop: () async {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return LogOutDialog(isRoom: true);
+          },
+        );
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: primaryColor,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Private Room",
                   style: Theme.of(context)
                       .textTheme
                       .headlineMedium
                       ?.copyWith(color: Colors.white)),
-            ),
-          ],
-        ),
-        centerTitle: false,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(child: ChatMessages(roomID: widget.roomID)),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: SendMessage(
-                    chatController: chatController, roomID: widget.roomID),
+              TextButton(
+                onPressed: () =>
+                    Clipboard.setData(ClipboardData(text: widget.roomID)),
+                child: Text(widget.roomID,
+                    textAlign: TextAlign.end,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(color: Colors.white)),
               ),
             ],
+          ),
+          centerTitle: false,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(child: ChatMessages(roomID: widget.roomID)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: SendMessage(
+                      chatController: chatController, roomID: widget.roomID),
+                ),
+              ],
+            ),
           ),
         ),
       ),

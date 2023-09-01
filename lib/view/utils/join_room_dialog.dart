@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:whisper_chat/view/utils/custom_buttons.dart';
 import '../../services/room_service.dart';
 import '../../Constants/colors.dart';
 
 void showJoinRoomDialog(BuildContext context) {
+  String roomID = "";
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: const Text('Enter Room ID'),
-      actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      title: const Text('Enter Room ID', style: TextStyle(fontSize: 25)),
+      actionsPadding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
       actions: [
         TextButton(
           onPressed: () {
@@ -18,14 +20,9 @@ void showJoinRoomDialog(BuildContext context) {
           child: const Text('Cancel',
               style: TextStyle(color: primaryColor, fontSize: 15)),
         ),
-        ElevatedButton(
-          style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(primaryColor),
-              padding: MaterialStatePropertyAll(
-                  EdgeInsets.symmetric(horizontal: 15, vertical: 10))),
-          onPressed: () {},
-          child: const Text('Join', style: TextStyle(fontSize: 15)),
-        ),
+        PrimaryButton(() async {
+          await RoomService().joinPrivateRoom(roomID, context);
+        }, "Join"),
       ],
       content: OtpTextField(
         numberOfFields: 6,
@@ -38,7 +35,8 @@ void showJoinRoomDialog(BuildContext context) {
         cursorColor: primaryColor,
         margin: const EdgeInsets.symmetric(horizontal: 3),
         onSubmit: (value) async {
-          await RoomService().joinPrivateRoom(value, context);
+          roomID = value;
+          await RoomService().joinPrivateRoom(roomID, context);
         },
       ),
     ),
