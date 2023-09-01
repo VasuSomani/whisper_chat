@@ -3,22 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:whisper_chat/Constants/colors.dart';
 import 'package:whisper_chat/controllers/auth_textfields.dart';
 import 'package:whisper_chat/services/auth_service.dart';
-import 'package:whisper_chat/view/utils/buttons.dart';
-import 'package:whisper_chat/view/utils/snackbar.dart';
+import 'package:whisper_chat/view/utils/custom_buttons.dart';
+import 'package:whisper_chat/view/utils/custom_snackbar.dart';
 
 bool isLoading = false;
 AuthService authService = AuthService();
 TextEditingController usernameController = TextEditingController();
 final formKey = GlobalKey<FormState>();
 
-class UserName extends StatefulWidget {
-  const UserName({Key? key}) : super(key: key);
+class AnonymousLogin extends StatefulWidget {
+  const AnonymousLogin({Key? key}) : super(key: key);
 
   @override
-  State<UserName> createState() => _UserNameState();
+  State<AnonymousLogin> createState() => _AnonymousLoginState();
 }
 
-class _UserNameState extends State<UserName> {
+class _AnonymousLoginState extends State<AnonymousLogin> {
+  @override
+  void dispose() {
+    FocusScope.of(context).requestFocus(FocusNode());
+    super.dispose();
+  }
+
   void authorizeAnonymous() async {
     if (formKey.currentState!.validate()) {
       setState(() {
@@ -31,7 +37,7 @@ class _UserNameState extends State<UserName> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/chat');
+          Navigator.pushReplacementNamed(context, '/private_room');
           usernameController.clear();
           showCustomSnackBar("Logged In Anonymously", context);
         });

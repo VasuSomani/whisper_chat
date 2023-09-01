@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-
-import '../utils/logout_dialog.dart';
+import 'package:flutter/services.dart';
 import '../../controllers/send_mesaage_textfield.dart';
 import '../../services/auth_service.dart';
 import '../utils/chat_messages.dart';
 import '../../Constants/colors.dart';
 
 class ChattingPage extends StatefulWidget {
-  const ChattingPage({Key? key}) : super(key: key);
+  const ChattingPage({Key? key, required this.roomID}) : super(key: key);
+  final String roomID;
   @override
   State<ChattingPage> createState() => _ChattingPageState();
 }
@@ -24,46 +24,44 @@ class _ChattingPageState extends State<ChattingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: primaryColor,
-          title: Text("Whisper Here...",
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(color: Colors.white)),
-          automaticallyImplyLeading: false,
-          centerTitle: false,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: IconButton(
-                icon: const Icon(Icons.logout_rounded,
-                    color: Colors.white, size: 30),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => const LogOutDialog());
-                },
-              ),
-            )
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Private Room",
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(color: Colors.white)),
+            TextButton(
+              onPressed: () =>
+                  Clipboard.setData(ClipboardData(text: widget.roomID)),
+              child: Text(widget.roomID,
+                  textAlign: TextAlign.end,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(color: Colors.white)),
+            ),
           ],
         ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Expanded(child: ChatMessages()),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: SendMessage(chatController),
-                ),
-              ],
-            ),
+        centerTitle: false,
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(child: ChatMessages(roomID: widget.roomID)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: SendMessage(
+                    chatController: chatController, roomID: widget.roomID),
+              ),
+            ],
           ),
         ),
       ),

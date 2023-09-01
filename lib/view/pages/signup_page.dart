@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../services/auth_service.dart';
 import '../../Constants/colors.dart';
-import '../utils/buttons.dart';
+import '../utils/custom_buttons.dart';
 import '../../controllers/auth_textfields.dart';
-import '../utils/snackbar.dart';
+import '../utils/custom_snackbar.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/chat');
+          Navigator.pushReplacementNamed(context, '/private_room');
         });
       } on FirebaseAuthException catch (e) {
         setState(() {

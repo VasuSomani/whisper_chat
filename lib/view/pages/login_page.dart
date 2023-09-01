@@ -1,3 +1,4 @@
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,9 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import '../../Constants/colors.dart';
 import '../../controllers/auth_textfields.dart';
-import '../utils/buttons.dart';
+import '../utils/custom_buttons.dart';
 import 'anonymous_login_page.dart';
-import '../utils/snackbar.dart';
+import '../utils/custom_snackbar.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
@@ -22,12 +23,14 @@ class _LogInPageState extends State<LogInPage> {
   final password = TextEditingController();
   final formKey = GlobalKey<FormState>();
   AuthService authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
 
     void authorize() async {
+      FocusManager.instance.primaryFocus?.unfocus();
       setState(() {
         isLoading = true;
       });
@@ -38,7 +41,7 @@ class _LogInPageState extends State<LogInPage> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/chat');
+          Navigator.pushReplacementNamed(context, '/private_room');
         });
       } on FirebaseAuthException catch (e) {
         setState(() {
@@ -48,11 +51,23 @@ class _LogInPageState extends State<LogInPage> {
       }
     }
 
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: DoubleBackToCloseApp(
+        snackBar: SnackBar(
+          content: Text(
+            "Back again to exit",
+            style: Theme.of(context)
+                .textTheme
+                .labelMedium
+                ?.copyWith(color: Colors.white),
+          ),
+          backgroundColor: primaryColor,
+          closeIconColor: Colors.white,
+          showCloseIcon: true,
+          dismissDirection: DismissDirection.down,
+        ),
+        child: SafeArea(
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(15),
@@ -85,11 +100,11 @@ class _LogInPageState extends State<LogInPage> {
                                 EdgeInsets.symmetric(vertical: height / 100),
                             child: TextFieldPass(password),
                           ),
-                          Padding(
-                            padding:
-                                EdgeInsets.symmetric(vertical: height / 100),
-                            child: Align(
-                              alignment: Alignment.centerRight,
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () => Navigator.pushNamed(
+                                  context, "/forgot_password"),
                               child: Text(
                                 "Forgot Password?",
                                 style: GoogleFonts.inter(
@@ -153,7 +168,8 @@ class _LogInPageState extends State<LogInPage> {
                                       onPressed: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => UserName(),
+                                            builder: (context) =>
+                                                AnonymousLogin(),
                                           )),
                                       child: Text(
                                         "Login Anonymously",

@@ -7,8 +7,11 @@ import '../Constants/colors.dart';
 import 'auth_textfields.dart';
 
 class SendMessage extends StatefulWidget {
-  const SendMessage(this.chatController, {Key? key}) : super(key: key);
+  const SendMessage(
+      {Key? key, required this.roomID, required this.chatController})
+      : super(key: key);
   final TextEditingController chatController;
+  final String roomID;
 
   @override
   State<SendMessage> createState() => _SendMessageState();
@@ -40,7 +43,11 @@ class _SendMessageState extends State<SendMessage> {
   void sendMessage() async {
     UserModel currUser = await getCurrUser();
     if (widget.chatController.text.trim().isNotEmpty) {
-      FirebaseFirestore.instance.collection('chats').add({
+      FirebaseFirestore.instance
+          .collection('rooms')
+          .doc(widget.roomID)
+          .collection('chats')
+          .add({
         'uid': currUser.uid,
         'userName': currUser.userName,
         'message': widget.chatController.text.toString(),
@@ -56,9 +63,7 @@ class _SendMessageState extends State<SendMessage> {
     return FutureBuilder<UserModel>(
       future: _userModelFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
+        if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           return Form(

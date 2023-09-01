@@ -47,4 +47,8 @@ class AuthService {
         .doc(uid)
         .set(UserModel(uid: uid, userName: userName, email: email).toJson());
   }
+
+  forgotPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
+  }
 }

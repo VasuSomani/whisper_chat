@@ -6,6 +6,8 @@ void showCustomSnackBar(String content, BuildContext context,
     {bool isAlert = false}) {
   ScaffoldMessenger.of(context).hideCurrentSnackBar();
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     content: Text(
       content,
       style: Theme.of(context)

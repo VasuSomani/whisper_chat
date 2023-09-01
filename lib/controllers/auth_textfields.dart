@@ -106,9 +106,9 @@ class _TextFieldPassState extends State<TextFieldPass> {
             suffixIcon: IconButton(
               icon: (isObscure)
                   ? const Icon(
-                      CupertinoIcons.eye_slash,
+                      CupertinoIcons.eye_slash_fill,
                     )
-                  : const Icon(CupertinoIcons.eye),
+                  : const Icon(CupertinoIcons.eye_fill),
               onPressed: () {
                 setState(() {
                   isObscure = !isObscure;

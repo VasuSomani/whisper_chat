@@ -1,24 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../Constants/colors.dart';
 
-class ChatMessages extends StatelessWidget {
-  const ChatMessages({Key? key}) : super(key: key);
+class ChatMessages extends StatefulWidget {
+  const ChatMessages({Key? key, required this.roomID}) : super(key: key);
+  final String roomID;
+
+  @override
+  State<ChatMessages> createState() => _ChatMessagesState();
+}
+
+class _ChatMessagesState extends State<ChatMessages> {
+  @override
+  void initState() {
+    debugPrint("INSIDE CHAT PAGE");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Inside Chat");
     FirebaseFirestore db = FirebaseFirestore.instance;
     String currUid = FirebaseAuth.instance.currentUser!.uid;
     return StreamBuilder(
       stream: db
+          .collection('rooms')
+          .doc(widget.roomID)
           .collection('chats')
           .orderBy('timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center(child: const CircularProgressIndicator());
         } else if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
           return ListView.builder(
             reverse: true,

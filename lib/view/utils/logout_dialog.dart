@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth_service.dart';
-import 'snackbar.dart';
+import 'custom_snackbar.dart';
 import '../../Constants/colors.dart';
-import 'buttons.dart';
+import 'custom_buttons.dart';
 
 class LogOutDialog extends StatefulWidget {
   const LogOutDialog({Key? key}) : super(key: key);
