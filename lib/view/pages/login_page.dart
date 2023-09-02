@@ -1,6 +1,6 @@
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../services/auth_service.dart';
@@ -19,6 +19,7 @@ class LogInPage extends StatefulWidget {
 
 class _LogInPageState extends State<LogInPage> {
   bool isLoading = false;
+  DateTime lastBackPressed = DateTime.now();
   final emailID = TextEditingController();
   final password = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -53,20 +54,18 @@ class _LogInPageState extends State<LogInPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: DoubleBackToCloseApp(
-        snackBar: SnackBar(
-          content: Text(
-            "Back again to exit",
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium
-                ?.copyWith(color: Colors.white),
-          ),
-          backgroundColor: primaryColor,
-          closeIconColor: Colors.white,
-          showCloseIcon: true,
-          dismissDirection: DismissDirection.down,
-        ),
+      body: WillPopScope(
+        onWillPop: () async {
+          final timeDifference = DateTime.now().difference(lastBackPressed);
+          lastBackPressed = DateTime.now();
+          if (timeDifference >= const Duration(seconds: 2)) {
+            showCustomSnackBar("Press back again to exit.", context);
+            return false;
+          } else {
+            SystemNavigator.pop(animated: true);
+            return true;
+          }
+        },
         child: SafeArea(
           child: Center(
             child: Padding(

@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../utils/custom_snackbar.dart';
 import '../utils/join_room_dialog.dart';
 import '../../services/room_service.dart';
 import '../utils/custom_buttons.dart';
@@ -16,6 +17,7 @@ class PrivateRoomPage extends StatefulWidget {
 
 class _PrivateRoomPageState extends State<PrivateRoomPage> {
   bool isInfoButtonHeld = false;
+  DateTime lastBackPressed = DateTime.now();
   void _showInfoDialog(BuildContext context) {
     Timer? timer;
     showDialog(
@@ -73,20 +75,18 @@ class _PrivateRoomPageState extends State<PrivateRoomPage> {
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
-      body: DoubleBackToCloseApp(
-        snackBar: SnackBar(
-          content: Text(
-            "Back again to exit",
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium
-                ?.copyWith(color: Colors.white),
-          ),
-          backgroundColor: primaryColor,
-          closeIconColor: Colors.white,
-          showCloseIcon: true,
-          dismissDirection: DismissDirection.down,
-        ),
+      body: WillPopScope(
+        onWillPop: () async {
+          final timeDifference = DateTime.now().difference(lastBackPressed);
+          lastBackPressed = DateTime.now();
+          if (timeDifference >= const Duration(seconds: 2)) {
+            showCustomSnackBar("Press back again to exit.", context);
+            return false;
+          } else {
+            SystemNavigator.pop(animated: true);
+            return true;
+          }
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: SingleChildScrollView(

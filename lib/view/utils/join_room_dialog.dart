@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:whisper_chat/view/utils/custom_buttons.dart';
+import 'custom_buttons.dart';
 import '../../services/room_service.dart';
 import '../../Constants/colors.dart';
 

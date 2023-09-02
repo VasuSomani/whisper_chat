@@ -60,7 +60,7 @@ class _AnonymousLoginState extends State<AnonymousLogin> {
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: primaryColor,
-            title: Text("Enter username"),
+            title: const Text("Enter username"),
             titleTextStyle: Theme.of(context)
                 .textTheme
                 .headlineMedium
@@ -73,9 +73,10 @@ class _AnonymousLoginState extends State<AnonymousLogin> {
                 Form(
                   key: formKey,
                   autovalidateMode: AutovalidateMode.disabled,
-                  child: TextFieldUserName(usernameController),
+                  child: TextFieldUserName(usernameController,
+                      enableValidation: true),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 PrimaryButton(
                   authorizeAnonymous,
                   "Proceed",

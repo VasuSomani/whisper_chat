@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:whisper_chat/view/utils/logout_dialog.dart';
+import '../utils/logout_dialog.dart';
 import '../../controllers/send_mesaage_textfield.dart';
 import '../../services/auth_service.dart';
 import '../utils/chat_messages.dart';
@@ -30,7 +30,7 @@ class _ChattingPageState extends State<ChattingPage> {
         showDialog(
           context: context,
           builder: (context) {
-            return LogOutDialog(isRoom: true);
+            return const LogOutDialog(isRoom: true);
           },
         );
         return true;
