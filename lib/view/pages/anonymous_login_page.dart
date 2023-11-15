@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:whisper_chat/Constants/colors.dart';
-import 'package:whisper_chat/controllers/auth_textfields.dart';
-import 'package:whisper_chat/services/auth_service.dart';
-import 'package:whisper_chat/view/utils/custom_buttons.dart';
-import 'package:whisper_chat/view/utils/custom_snackbar.dart';
+import '../../Constants/colors.dart';
+import '../../controllers/auth_textfields.dart';
+import '../../services/auth_service.dart';
+import '../utils/custom_buttons.dart';
+import '../utils/custom_snackbar.dart';
 
 bool isLoading = false;
 AuthService authService = AuthService();

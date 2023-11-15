@@ -18,14 +18,14 @@ class PrimaryButton extends StatelessWidget {
           backgroundColor: MaterialStatePropertyAll((isContrast)
               ? Colors.deepPurpleAccent.withOpacity(0.7)
               : primaryColor),
-          shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+          shape: const MaterialStatePropertyAll(RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20))))),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: (isLoading)
-            ? FittedBox(
+            ? const FittedBox(
                 fit: BoxFit.scaleDown,
-                child: const CircularProgressIndicator(color: Colors.white))
+                child: CircularProgressIndicator(color: Colors.white))
             : Text(text,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.white, fontWeight: FontWeight.bold)),

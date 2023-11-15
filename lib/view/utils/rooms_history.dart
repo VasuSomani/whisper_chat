@@ -17,7 +17,7 @@ class RoomsHistory extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              "Recent Joined Rooms",
+              "Recent Rooms",
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: Colors.black,
                     letterSpacing: 0,

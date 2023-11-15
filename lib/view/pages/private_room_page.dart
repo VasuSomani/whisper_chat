@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:whisper_chat/view/utils/rooms_history.dart';
+import '../utils/rooms_history.dart';
 import '../utils/custom_snackbar.dart';
 import '../utils/join_room_dialog.dart';
 import '../../services/room_service.dart';
@@ -132,7 +132,7 @@ class _PrivateRoomPageState extends State<PrivateRoomPage> {
                     showJoinRoomDialog(context);
                   }, 'Join a Private Room'),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 50),
                 const RoomsHistory()
               ],
             ),
