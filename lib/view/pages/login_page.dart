@@ -190,7 +190,7 @@ class _LogInPageState extends State<LogInPage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                AnonymousLogin(),
+                                                const AnonymousLogin(),
                                           )),
                                       child: Text(
                                         "Login Anonymously",
