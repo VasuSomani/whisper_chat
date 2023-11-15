@@ -5,22 +5,27 @@ import '../../Constants/colors.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton(this.onPressed, this.text,
-      {super.key, this.isLoading = false});
+      {super.key, this.isLoading = false, this.isContrast = false});
   final Function()? onPressed;
   final String text;
   final bool isLoading;
+  final bool isContrast;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      style: const ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(primaryColor),
+      style: ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll((isContrast)
+              ? Colors.deepPurpleAccent.withOpacity(0.7)
+              : primaryColor),
           shape: MaterialStatePropertyAll(RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20))))),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: (isLoading)
-            ? const CircularProgressIndicator(color: Colors.white)
+            ? FittedBox(
+                fit: BoxFit.scaleDown,
+                child: const CircularProgressIndicator(color: Colors.white))
             : Text(text,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.white, fontWeight: FontWeight.bold)),

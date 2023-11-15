@@ -36,16 +36,22 @@ class _SignUpPageState extends State<SignUpPage> {
         setState(() {
           isLoading = true;
         });
+
         await authService
             .signUpWithUserData(
                 userName: userName.text.toString(),
                 email: emailID.text.toString(),
                 password: password.text.toString())
-            .then((value) {
+            .then((value) async {
+          await authService.sendEmailVerificationLink().then((value) {
+            showCustomSnackBar(
+                "Verification link has been sent to your email", context,
+                isSuccess: true);
+          });
           setState(() {
             isLoading = false;
           });
-          Navigator.pushReplacementNamed(context, '/private_room');
+          // Navigator.pushReplacementNamed(context, '/private_room');
         });
       } on FirebaseAuthException catch (e) {
         setState(() {

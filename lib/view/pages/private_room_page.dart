@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:whisper_chat/view/utils/rooms_history.dart';
 import '../utils/custom_snackbar.dart';
 import '../utils/join_room_dialog.dart';
 import '../../services/room_service.dart';
@@ -17,6 +18,7 @@ class PrivateRoomPage extends StatefulWidget {
 
 class _PrivateRoomPageState extends State<PrivateRoomPage> {
   bool isInfoButtonHeld = false;
+  bool isLoading = false;
   DateTime lastBackPressed = DateTime.now();
   void _showInfoDialog(BuildContext context) {
     Timer? timer;
@@ -87,9 +89,10 @@ class _PrivateRoomPageState extends State<PrivateRoomPage> {
             return true;
           }
         },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -106,10 +109,19 @@ class _PrivateRoomPageState extends State<PrivateRoomPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height / 15,
-                  child: PrimaryButton(() {
-                    String roomID = RoomService().createPrivateRoom();
-                    Navigator.pushNamed(context, '/chat', arguments: roomID);
-                  }, 'Create a Private Room'),
+                  child: PrimaryButton(
+                    () async {
+                      setState(() => isLoading = true);
+                      String roomID =
+                          await RoomService().createPrivateRoom().then((value) {
+                        setState(() => isLoading = false);
+                        return value;
+                      });
+                      Navigator.pushNamed(context, '/chat', arguments: roomID);
+                    },
+                    'Create a Private Room',
+                    isLoading: isLoading,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -121,6 +133,7 @@ class _PrivateRoomPageState extends State<PrivateRoomPage> {
                   }, 'Join a Private Room'),
                 ),
                 const SizedBox(height: 40),
+                const RoomsHistory()
               ],
             ),
           ),

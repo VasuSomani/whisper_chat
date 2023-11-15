@@ -5,9 +5,18 @@ import '../view/utils/custom_snackbar.dart';
 
 class RoomService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  String createPrivateRoom() {
+  static List<String> lastFiveRooms = [];
+  Future<String> createPrivateRoom() async {
     String roomID = generateUUID();
-    _db.collection('rooms').doc(roomID).set({});
+    if (lastFiveRooms.length >= 5) {
+      lastFiveRooms.removeAt(0);
+      lastFiveRooms.add(roomID);
+      debugPrint(lastFiveRooms.toString());
+    } else {
+      lastFiveRooms.add(roomID);
+      debugPrint(lastFiveRooms.toString());
+    }
+    await _db.collection('rooms').doc(roomID).set({});
     return roomID;
   }
 
@@ -17,6 +26,20 @@ class RoomService {
     if (isRoomExists) {
       debugPrint("ROOM FOUND");
       Navigator.pushNamed(context, '/chat', arguments: roomID);
+      if (lastFiveRooms.contains(roomID)) {
+        lastFiveRooms.remove(roomID);
+        lastFiveRooms.add(roomID);
+        debugPrint(lastFiveRooms.toString());
+      } else {
+        if (lastFiveRooms.length == 5) {
+          lastFiveRooms.removeAt(0);
+          lastFiveRooms.add(roomID);
+          debugPrint(lastFiveRooms.toString());
+        } else {
+          lastFiveRooms.add(roomID);
+          debugPrint(lastFiveRooms.toString());
+        }
+      }
     } else {
       debugPrint("ROOM NOT FOUND");
       showCustomSnackBar("Room doesnot exists", context, isAlert: true);

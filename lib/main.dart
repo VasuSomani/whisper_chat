@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whisper_chat/view/pages/private_room_page.dart';
+import 'package:whisper_chat/view/pages/welcome_page.dart';
 
 import 'view/pages/chatting_page.dart';
 import 'view/pages/login_page.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator(color: Colors.black);
           } else {
-            return const LogInPage();
+            return const WelcomePage();
           }
         },
       ),

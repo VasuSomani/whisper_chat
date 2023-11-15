@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../Constants/colors.dart';
 
 void showCustomSnackBar(String content, BuildContext context,
-    {bool isAlert = false}) {
+    {bool isAlert = false, bool isSuccess = false}) {
   ScaffoldMessenger.of(context).hideCurrentSnackBar();
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     behavior: SnackBarBehavior.floating,
@@ -15,9 +15,14 @@ void showCustomSnackBar(String content, BuildContext context,
           .labelMedium
           ?.copyWith(color: Colors.white),
     ),
-    backgroundColor: (isAlert) ? (alert) : (primaryColor),
+    backgroundColor: (isAlert)
+        ? (alert)
+        : (isSuccess)
+            ? Colors.green
+            : (primaryColor),
     closeIconColor: Colors.white,
     showCloseIcon: true,
     dismissDirection: DismissDirection.down,
+    duration: const Duration(seconds: 1),
   ));
 }

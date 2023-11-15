@@ -32,8 +32,19 @@ class AuthService {
     createUser(userName: userName, email: email, uid: uid);
   }
 
+  //Send Email Verification Link
+  Future sendEmailVerificationLink() async {
+    await _auth.currentUser!.sendEmailVerification();
+  }
+
+  //Check if Email is Verified
+  Future<bool> checkEmailVerified() async {
+    await _auth.currentUser!.reload();
+    return _auth.currentUser!.emailVerified;
+  }
+
   //Log out
-  signOut() async {
+  Future signOut() async {
     _auth.signOut();
   }
 

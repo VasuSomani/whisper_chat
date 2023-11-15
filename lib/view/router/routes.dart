@@ -4,12 +4,15 @@ import '../pages/private_room_page.dart';
 import '../pages/chatting_page.dart';
 import '../pages/login_page.dart';
 import '../pages/signup_page.dart';
+import '../pages/welcome_page.dart';
 
 class Routes extends NavigatorObserver {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     var args = settings.arguments;
 
     switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(builder: (_) => const WelcomePage());
       case '/login':
         return MaterialPageRoute(builder: (_) => const LogInPage());
       case '/signup':

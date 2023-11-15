@@ -35,14 +35,36 @@ class _LogInPageState extends State<LogInPage> {
       setState(() {
         isLoading = true;
       });
+      if (emailID.text.toString().trim().isEmpty ||
+          password.text.toString().trim().isEmpty) {
+        setState(() {
+          isLoading = false;
+        });
+        showCustomSnackBar("Email and Password can't be empty", context,
+            isAlert: true);
+        return;
+      }
       try {
         await authService
             .signInWithEmail(emailID.text.toString(), password.text.toString())
-            .then((value) {
-          setState(() {
-            isLoading = false;
+            .then((value) async {
+          await authService.checkEmailVerified().then((value) async {
+            if (value) {
+              debugPrint("Email verified");
+
+              Navigator.pushReplacementNamed(context, '/private_room');
+            } else {
+              debugPrint("Email not verified");
+              setState(() {
+                isLoading = false;
+              });
+              showCustomSnackBar("Please verify your email first", context,
+                  isAlert: true);
+            }
+            setState(() {
+              isLoading = false;
+            });
           });
-          Navigator.pushReplacementNamed(context, '/private_room');
         });
       } on FirebaseAuthException catch (e) {
         setState(() {
